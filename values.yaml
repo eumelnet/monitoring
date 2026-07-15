@@ -1,5 +1,4 @@
 # sub chart config
-fullnameOverride: monitoring
 # https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 grafana:
   #adminPassword: prom-operator

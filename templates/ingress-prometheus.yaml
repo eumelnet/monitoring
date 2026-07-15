@@ -1,15 +1,16 @@
 {{- if index .Values "oauth2-proxy" "enabled" }}
+{{- $fullname := printf "%s-%s" .Release.Name .Chart.Name }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "carbon-footprint.fullname" . }}-prometheus
+  name: {{ $fullname }}-prometheus
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "carbon-footprint.labels" . | nindent 4 }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ include "carbon-footprint.fullname" . }}-forward-auth@kubernetescrd,{{ .Release.Namespace }}-{{ include "carbon-footprint.fullname" . }}-oauth-errors@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-{{ $fullname }}-forward-auth@kubernetescrd,{{ .Release.Namespace }}-{{ $fullname }}-oauth-errors@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
@@ -20,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "carbon-footprint.fullname" . }}-prometheus-server
+                name: {{ $fullname }}-prometheus-server
                 port:
                   number: 80
   tls:
