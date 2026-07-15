@@ -11,5 +11,8 @@ dependencies:
 - name: prometheus-blackbox-exporter
   repository: https://prometheus-community.github.io/helm-charts
   version: 11.15.1
-digest: sha256:f3073053f5023835646749a99b75f4924bf06c77a5fa8d7b5ee221e56e2d2a0f
-generated: "2026-07-15T16:58:31.832859016Z"
+- name: oauth2-proxy
+  repository: https://oauth2-proxy.github.io/manifests
+  version: 10.7.0
+digest: sha256:7dd400d73f767a95f8742be7bd23eccc1db442775f409e5b21e79130c7852341
+generated: "2026-07-15T18:35:40.086411122Z"

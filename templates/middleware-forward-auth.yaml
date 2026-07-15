@@ -1,0 +1,34 @@
+{{- if .Values.oauth2-proxy.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "carbon-footprint.fullname" . }}-forward-auth
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "carbon-footprint.labels" . | nindent 4 }}
+spec:
+  forwardAuth:
+    address: "http://{{ include "carbon-footprint.fullname" . }}-oauth2-proxy:80/oauth2/auth"
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "carbon-footprint.fullname" . }}-oauth-errors
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "carbon-footprint.labels" . | nindent 4 }}
+spec:
+  errors:
+    status:
+      - "401-403"
+    service:
+      name: {{ include "carbon-footprint.fullname" . }}-oauth2-proxy
+      port: 80
+    query: "/oauth2/sign_in?rd={url}"
+    statusRewrites:
+      "401": 302
+{{- end }}

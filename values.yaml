@@ -133,3 +133,35 @@ loki-stack:
       serverPort: 3101
       clients:
         - url: http://monitoring-loki:3100/loki/api/v1/push
+
+# https://github.com/oauth2-proxy/manifests/blob/main/charts/oauth2-proxy/values.yaml
+oauth2-proxy:
+  enabled: true
+  config:
+    existingSecret: ""
+    configFile: |-
+      provider = "github"
+      reverse_proxy = true
+      upstream = "static://202"
+      cookie_domains = [".t.eumel.de"]
+      whitelist_domains = [".t.eumel.de"]
+      cookie_secure = true
+      cookie_httponly = true
+      cookie_samesite = "lax"
+      set_xauthrequest = true
+      pass_access_token = false
+      skip_provider_button = true
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    hosts:
+      - oauth.t.eumel.de
+    path: /
+    pathType: Prefix
+    tls:
+      - secretName: oauth2-proxy-tls
+        hosts:
+          - oauth.t.eumel.de
