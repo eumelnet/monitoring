@@ -142,7 +142,7 @@ oauth2-proxy:
     configFile: |-
       provider = "github"
       reverse_proxy = true
-      upstream = "static://202"
+      upstreams = ["static://202"]
       cookie_domains = [".t.eumel.de"]
       whitelist_domains = [".t.eumel.de"]
       cookie_secure = true
