@@ -8,7 +8,7 @@ metadata:
     {{- include "carbon-footprint.labels" . | nindent 4 }}
 spec:
   forwardAuth:
-    address: "http://{{ .Release.Name }}-oauth2-proxy:80/oauth2/auth"
+    address: "http://{{ .Release.Name }}-oauth2-proxy.{{ .Release.Namespace }}.svc.cluster.local:80/oauth2/auth"
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-Access-Token
