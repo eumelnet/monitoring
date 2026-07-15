@@ -1,4 +1,4 @@
-{{- if .Values.oauth2-proxy.enabled }}
+{{- if index .Values "oauth2-proxy" "enabled" }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
