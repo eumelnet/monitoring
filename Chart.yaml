@@ -1,7 +1,7 @@
 apiVersion: v2
 name: monitoring
 description: A Helm chart for K3s monitoring with Prometheus and Grafana
-version: "0.0.2"
+version: "0.0.3"
 appVersion: "0.0.1"
 keywords:
   - monitoring
@@ -15,6 +15,9 @@ dependencies:
   - name: grafana
     version: "12.7.1"
     repository: "https://grafana-community.github.io/helm-charts"
+  - name: prometheus-blackbox-exporter
+    version: "11.15.1"
+    repository: "https://prometheus-community.github.io/helm-charts"
 sources:
   - https://github.com/eumelnet/monitoring
 maintainers:

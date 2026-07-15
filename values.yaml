@@ -78,7 +78,7 @@ grafana:
 # https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml
 prometheus:
   alertmanager:
-    enabled: false
+    enabled: true
   kube-state-metrics:
     enabled: true
   prometheus-node-exporter:
@@ -92,25 +92,36 @@ prometheus:
       subPath: ""
       configMap: monitoring-scrapings
       readOnly: true
-#  extraScrapeConfigs: |-
-#    - job_name: kepler
-#      static_configs:
-#      - targets: ["kepler:9102"]
-#      metric_relabel_configs:
-#      - action: replace
-#        regex: (.*)
-#        source_labels:
-#        - container_namespace
-#        target_label: namespace
-#      relabel_configs:
-#      - action: replace
-#        regex: (.*)
-#        replacement: $1
-#        source_labels:
-#        - __meta_kubernetes_pod_node_name
-#        target_label: instance
-#      scrape_interval: 1m
-#      scrape_timeout: 30s
+  extraScrapeConfigs: |-
+    - job_name: blackbox-http
+      metrics_path: /probe
+      params:
+        module: [http_2xx]
+      static_configs:
+        - targets:
+          - https://monitoring.example.com
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: monitoring-prometheus-blackbox-exporter:9115
+    - job_name: blackbox-http-icmp
+      metrics_path: /probe
+      params:
+        module: [icmp]
+      static_configs:
+        - targets:
+          - 1.1.1.1
+          - 8.8.8.8
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: monitoring-prometheus-blackbox-exporter:9115
 loki-stack:
   test_pod:
     enabled: false
